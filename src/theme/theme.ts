@@ -14,7 +14,7 @@ export const theme = {
   },
 
   logo: {
-    name: "Bright Future Academy",
-    shortName: "BFA"
+    name: "Lakshya Academy",
+    shortName: "LA"
   }
 };
