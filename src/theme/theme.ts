@@ -1,20 +1,24 @@
 export const theme = {
   colors: {
     primary: "#2563eb",
+    primaryHover: "#1d4ed8",
     secondary: "#f97316",
+
+    page: "#f8fafc",
+    white: "#ffffff",
+
     dark: "#0f172a",
-    light: "#f8fafc",
-    text: "#1e293b",
+    text: "#334155",
     muted: "#64748b",
-    white: "#ffffff"
+
+    sidebar: "#0f172a",
+    sidebarItem: "#1e293b",
+
+    border: "#e2e8f0"
   },
 
-  font: {
-    main: "'Inter', sans-serif"
-  },
-
-  logo: {
-    name: "Lakshya Academy",
-    shortName: "LA"
+  radius: {
+    card: "24px",
+    button: "12px"
   }
 };

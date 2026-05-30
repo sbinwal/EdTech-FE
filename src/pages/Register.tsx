@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
-import { theme } from "../theme/theme";
 
 function Register() {
   const navigate = useNavigate();
@@ -24,7 +23,9 @@ function Register() {
 
     try {
       await API.post("/auth/register", formData);
+
       alert("Registration successful");
+
       navigate("/login");
     } catch (error: any) {
       alert(error?.response?.data?.message || "Registration failed");
@@ -32,56 +33,73 @@ function Register() {
   };
 
   return (
-    <section style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.left}>
-          <h1 style={styles.heading}>Start Learning Today</h1>
-          <p style={styles.text}>
+    <section className="flex min-h-[80vh] items-center justify-center bg-[var(--color-page)] px-4 py-10">
+      <div className="app-card grid w-full max-w-6xl overflow-hidden md:grid-cols-2">
+        <div className="flex min-h-[360px] flex-col justify-center bg-gradient-to-br from-[var(--color-primary)] via-purple-500 to-[var(--color-secondary)] p-8 text-white md:min-h-[560px] md:p-14">
+          <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
+            Start Learning Today
+          </h1>
+
+          <p className="mt-8 max-w-md text-lg leading-8">
             Join our coaching platform for Sainik School preparation and
             academic classes from Class 3rd to 10th.
           </p>
         </div>
 
-        <div style={styles.right}>
-          <h2 style={styles.formTitle}>Create Account</h2>
-          <p style={styles.formSubText}>Register to access your dashboard</p>
+        <div className="flex flex-col justify-center p-6 md:p-14">
+          <h2 className="app-heading text-3xl md:text-4xl">
+            Create Account
+          </h2>
 
-          <form onSubmit={handleSubmit}>
+          <p className="app-muted mt-3 text-lg">
+            Register to access your dashboard
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <input
-              style={styles.input}
+              className="app-input text-base"
               type="text"
               name="name"
               placeholder="Full Name"
+              value={formData.name}
               onChange={handleChange}
               required
             />
 
             <input
-              style={styles.input}
+              className="app-input text-base"
               type="email"
               name="email"
               placeholder="Email Address"
+              value={formData.email}
               onChange={handleChange}
               required
             />
 
             <input
-              style={styles.input}
+              className="app-input text-base"
               type="password"
               name="password"
               placeholder="Password"
+              value={formData.password}
               onChange={handleChange}
               required
             />
 
-            <button style={styles.button} type="submit">
+            <button
+              className="app-button-primary w-full py-4 text-lg cursor-pointer"
+              type="submit"
+            >
               Sign Up
             </button>
           </form>
 
-          <p style={styles.bottomText}>
+          <p className="app-muted mt-6 text-lg">
             Already have an account?{" "}
-            <Link to="/login" style={styles.link}>
+            <Link
+              to="/login"
+              className="font-extrabold text-[var(--color-primary)]"
+            >
               Login
             </Link>
           </p>
@@ -90,84 +108,5 @@ function Register() {
     </section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "80vh",
-    backgroundColor: theme.colors.light,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "60px 20px",
-    fontFamily: theme.font.main
-  },
-  card: {
-    width: "100%",
-    maxWidth: "1000px",
-    backgroundColor: theme.colors.white,
-    borderRadius: "22px",
-    overflow: "hidden",
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    boxShadow: "0 20px 45px rgba(15, 23, 42, 0.15)"
-  },
-  left: {
-    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-    color: theme.colors.white,
-    padding: "60px 45px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center"
-  },
-  heading: {
-    fontSize: "42px",
-    marginBottom: "20px"
-  },
-  text: {
-    fontSize: "17px",
-    lineHeight: "1.7"
-  },
-  right: {
-    padding: "50px 45px"
-  },
-  formTitle: {
-    fontSize: "32px",
-    color: theme.colors.dark,
-    marginBottom: "8px"
-  },
-  formSubText: {
-    color: theme.colors.muted,
-    marginBottom: "28px"
-  },
-  input: {
-    width: "100%",
-    padding: "14px 16px",
-    marginBottom: "16px",
-    border: "1px solid #cbd5e1",
-    borderRadius: "10px",
-    fontSize: "15px",
-    outline: "none"
-  },
-  button: {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    borderRadius: "10px",
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    fontSize: "16px",
-    fontWeight: 700,
-    cursor: "pointer"
-  },
-  bottomText: {
-    marginTop: "20px",
-    color: theme.colors.muted
-  },
-  link: {
-    color: theme.colors.primary,
-    fontWeight: 700,
-    textDecoration: "none"
-  }
-};
 
 export default Register;

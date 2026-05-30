@@ -1,76 +1,58 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { theme } from "../theme/theme";
 
 function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <nav
-      style={{
-        fontFamily: theme.font.main,
-        backgroundColor: theme.colors.white,
-        padding: "16px 60px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.08)"
-      }}
-    >
-      <Link
-        to="/"
-        style={{
-          textDecoration: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px"
-        }}
-      >
-        <div
-          style={{
-            width: "42px",
-            height: "42px",
-            borderRadius: "50%",
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.white,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: "bold"
-          }}
-        >
-          {theme.logo.shortName}
-        </div>
+    <nav className="relative bg-white shadow-sm">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
+        <Link to="/" className="flex min-w-0 items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+            LA
+          </div>
 
-        <h2 style={{ color: theme.colors.dark, margin: 0 }}>
-          {theme.logo.name}
-        </h2>
-      </Link>
-
-      <div style={{ display: "flex", gap: "25px", alignItems: "center" }}>
-        <Link to="/" style={navLink}>Home</Link>
-        <Link to="/courses" style={navLink}>Courses</Link>
-        <Link to="/login" style={navLink}>Login</Link>
-
-        <Link
-          to="/register"
-          style={{
-            backgroundColor: theme.colors.primary,
-            color: theme.colors.white,
-            padding: "10px 18px",
-            borderRadius: "8px",
-            textDecoration: "none",
-            fontWeight: 600
-          }}
-        >
-          Sign Up
+          <h2 className="truncate text-xl font-bold text-slate-900 md:text-2xl">
+            Lakshya Academy
+          </h2>
         </Link>
+
+        <button
+          className="block text-3xl text-slate-900 md:hidden cursor-pointer"
+          onClick={() => setOpen(!open)}
+        >
+          ☰
+        </button>
+
+        <div className="hidden items-center gap-8 md:flex">
+          <Link to="/" className="font-medium text-slate-700">Home</Link>
+          <Link to="/courses" className="font-medium text-slate-700">Courses</Link>
+          <Link to="/login" className="font-medium text-slate-700">Login</Link>
+          <Link
+            to="/register"
+            className="rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white"
+          >
+            Sign Up
+          </Link>
+        </div>
       </div>
+
+      {open && (
+        <div className="absolute left-0 right-0 top-full z-50 flex flex-col gap-4 bg-white px-4 py-5 shadow-lg md:hidden">
+          <Link onClick={() => setOpen(false)} to="/">Home</Link>
+          <Link onClick={() => setOpen(false)} to="/courses">Courses</Link>
+          <Link onClick={() => setOpen(false)} to="/login">Login</Link>
+          <Link
+            onClick={() => setOpen(false)}
+            to="/register"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-center font-semibold text-white"
+          >
+            Sign Up
+          </Link>
+        </div>
+      )}
     </nav>
   );
 }
-
-const navLink = {
-  color: theme.colors.text,
-  textDecoration: "none",
-  fontWeight: 500
-};
 
 export default Navbar;

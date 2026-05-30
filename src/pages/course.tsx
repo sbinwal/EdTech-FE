@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import API from "../api/axios";
-import { theme } from "../theme/theme";
-import { type Course, type Category } from "../types/course";
 import { useNavigate } from "react-router-dom";
+import API from "../api/axios";
+import { type Course, type Category } from "../types/course";
 
 function Courses() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-    const navigate = useNavigate();
+
+  const navigate = useNavigate();
 
   const fetchCategories = async () => {
     const res = await API.get("/categories");
@@ -28,300 +28,137 @@ function Courses() {
   const filteredCourses =
     selectedCategory === "all"
       ? courses
-      : courses.filter((course) => course.category?._id === selectedCategory);
+      : courses.filter(
+          (course) => course.category?._id === selectedCategory
+        );
 
   return (
-    <section style={styles.page}>
-      <div style={styles.header}>
-        <span style={styles.smallHeading}>Courses</span>
+    <section className="min-h-[80vh] bg-[var(--color-page)] px-4 py-12 md:px-8">
+      <div className="mx-auto max-w-7xl">
+        <div className="text-center">
+          <span className="text-sm font-extrabold uppercase tracking-wider text-[var(--color-primary)]">
+            Courses
+          </span>
 
-        <h1 style={styles.title}>Choose Your Program</h1>
+          <h1 className="app-heading mt-3 text-4xl md:text-5xl">
+            Choose Your Program
+          </h1>
 
-        <p style={styles.subtitle}>
-          Select Sainik School preparation or academic classes and enroll
-          according to your class.
-        </p>
-      </div>
+          <p className="app-muted mx-auto mt-4 max-w-2xl text-lg leading-8">
+            Select Sainik School preparation or academic classes and enroll
+            according to your class.
+          </p>
+        </div>
 
-      <div style={styles.categoryWrapper}>
-        <button
-          style={{
-            ...styles.categoryButton,
-            ...(selectedCategory === "all" ? styles.activeCategory : {})
-          }}
-          onClick={() => setSelectedCategory("all")}
-        >
-          All Courses
-        </button>
-
-        {categories.map((category) => (
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
           <button
-            key={category._id}
-            style={{
-              ...styles.categoryButton,
-              ...(selectedCategory === category._id ? styles.activeCategory : {})
-            }}
-            onClick={() => setSelectedCategory(category._id)}
+            className={`rounded-full cursor-pointer border px-5 py-2.5 font-bold transition ${
+              selectedCategory === "all"
+                ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)]"
+                : "border-[var(--color-primary)] text-[var(--color-primary)]"
+            }`}
+            onClick={() => setSelectedCategory("all")}
           >
-            {category.name}
+            All Courses
           </button>
-        ))}
-      </div>
 
-      <div style={styles.grid}>
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course) => (
-            <div key={course._id} style={styles.card}>
-              <div style={styles.cardHeader}>
-                <span style={styles.badge}>{course.category?.name}</span>
+          {categories.map((category) => (
+            <button
+              key={category._id}
+              className={`rounded-full border px-5 py-2.5 font-bold cursor-pointer transition ${
+                selectedCategory === category._id
+                  ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)]"
+                  : "border-[var(--color-primary)] text-[var(--color-primary)]"
+              }`}
+              onClick={() => setSelectedCategory(category._id)}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
 
-                <span style={styles.classBadge}>
-                  Class {course.classLevel}
-                </span>
-              </div>
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course) => (
+              <div key={course._id} className="app-card p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="rounded-full bg-blue-50 px-4 py-2 text-sm font-extrabold text-[var(--color-primary)]">
+                    {course.category?.name}
+                  </span>
 
-              <div style={styles.middleRow}>
-                <div style={styles.courseIcon}>🎓</div>
-
-                <div style={styles.featureBox}>
-                  <div style={styles.featureItem}>📹 Recorded Lectures</div>
-                  <div style={styles.featureItem}>📈 Progress Tracking</div>
-                  <div style={styles.featureItem}>📝 Tests & Notes</div>
-                  <div style={styles.featureItem}>👨‍🏫 Expert Guidance</div>
+                  <span className="rounded-full bg-orange-50 px-4 py-2 text-sm font-extrabold text-[var(--color-secondary)]">
+                    Class {course.classLevel}
+                  </span>
                 </div>
+
+                <div className="mt-8 flex flex-col gap-5 sm:flex-row">
+                  <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-5xl">
+                    🎓
+                  </div>
+
+                  <div className="flex-1 rounded-2xl border border-[var(--color-border)] bg-slate-50 p-4">
+                    <p className="font-semibold text-[var(--color-text)]">
+                      📹 Recorded Lectures
+                    </p>
+
+                    <p className="mt-2 font-semibold text-[var(--color-text)]">
+                      📈 Progress Tracking
+                    </p>
+
+                    <p className="mt-2 font-semibold text-[var(--color-text)]">
+                      📝 Tests & Notes
+                    </p>
+
+                    <p className="mt-2 font-semibold text-[var(--color-text)]">
+                      👨‍🏫 Expert Guidance
+                    </p>
+                  </div>
+                </div>
+
+                <h2 className="app-heading mt-8 text-2xl">
+                  {course.title}
+                </h2>
+
+                <p className="app-muted mt-3 min-h-16 leading-7">
+                  {course.description ||
+                    "Complete course with expert guidance and recorded lectures."}
+                </p>
+
+                <div className="my-6 h-px bg-[var(--color-border)]" />
+
+                <div>
+                  <p className="app-muted font-semibold">
+                    Monthly Fee
+                  </p>
+
+                  <h3 className="mt-1 text-4xl font-black text-[var(--color-secondary)]">
+                    ₹{course.fees}
+                  </h3>
+
+                  <p className="app-muted">
+                    per month
+                  </p>
+                </div>
+
+                <button
+                  className="app-button-primary mt-6 w-full py-3 cursor-pointer"
+                  onClick={() =>
+                    navigate(`/courses/${course._id}`)
+                  }
+                >
+                  View Details
+                </button>
               </div>
-
-              <h2 style={styles.courseTitle}>{course.title}</h2>
-
-              <p style={styles.description}>
-                {course.description ||
-                  "Complete course with expert guidance and recorded lectures."}
-              </p>
-
-              <div style={styles.divider}></div>
-
-              <div style={styles.feeSection}>
-                <span style={styles.feeLabel}>Monthly Fee</span>
-
-                <h3 style={styles.fees}>₹{course.fees}</h3>
-
-                <span style={styles.perMonth}>per month</span>
-              </div>
-
-              <button
-  style={styles.button}
-  onClick={() => navigate(`/courses/${course._id}`)}
->
-  View Details
-</button>
-            </div>
-          ))
-        ) : (
-          <p style={styles.noCourse}>No courses found in this category.</p>
-        )}
+            ))
+          ) : (
+            <p className="app-muted col-span-full text-center text-lg">
+              No courses found in this category.
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "80vh",
-    backgroundColor: theme.colors.light,
-    padding: "70px 60px",
-    fontFamily: theme.font.main
-  },
-
-  header: {
-    textAlign: "center",
-    marginBottom: "35px"
-  },
-
-  smallHeading: {
-    color: theme.colors.primary,
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "1px",
-    fontSize: "14px"
-  },
-
-  title: {
-    fontSize: "44px",
-    color: theme.colors.dark,
-    marginTop: "10px",
-    marginBottom: "12px"
-  },
-
-  subtitle: {
-    color: theme.colors.muted,
-    fontSize: "17px",
-    maxWidth: "650px",
-    margin: "0 auto",
-    lineHeight: "1.7"
-  },
-
-  categoryWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    gap: "14px",
-    marginBottom: "45px"
-  },
-
-  categoryButton: {
-    padding: "12px 22px",
-    borderRadius: "999px",
-    border: `1px solid ${theme.colors.primary}`,
-    backgroundColor: theme.colors.white,
-    color: theme.colors.primary,
-    fontWeight: 800,
-    cursor: "pointer"
-  },
-
-  activeCategory: {
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    boxShadow: "0 10px 22px rgba(37, 99, 235, 0.25)"
-  },
-
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(380px, 500px))",
-    justifyContent: "center",
-    gap: "30px"
-  },
-
-  card: {
-    backgroundColor: theme.colors.white,
-    padding: "24px",
-    borderRadius: "22px",
-    boxShadow: "0 14px 35px rgba(15, 23, 42, 0.09)",
-    border: "1px solid #e2e8f0"
-  },
-
-  cardHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "22px",
-    gap: "10px"
-  },
-
-  badge: {
-    backgroundColor: "#dbeafe",
-    color: theme.colors.primary,
-    padding: "7px 13px",
-    borderRadius: "999px",
-    fontSize: "13px",
-    fontWeight: 800
-  },
-
-  classBadge: {
-    backgroundColor: "#ecfeff",
-    color: "#0891b2",
-    padding: "7px 13px",
-    borderRadius: "999px",
-    fontSize: "13px",
-    fontWeight: 800
-  },
-
-  middleRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "20px",
-    marginBottom: "20px"
-  },
-
-  courseIcon: {
-    width: "90px",
-    height: "90px",
-    borderRadius: "18px",
-    backgroundColor: "#eff6ff",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontSize: "42px",
-    flexShrink: 0
-  },
-
-  featureBox: {
-    flex: 1,
-    backgroundColor: "#f8fafc",
-    border: "1px solid #e2e8f0",
-    borderRadius: "14px",
-    padding: "15px"
-  },
-
-  featureItem: {
-    padding: "6px 0",
-    color: theme.colors.text,
-    fontSize: "14px",
-    fontWeight: 600
-  },
-
-  courseTitle: {
-    color: theme.colors.dark,
-    fontSize: "24px",
-    marginTop: "0",
-    marginBottom: "12px",
-    lineHeight: "1.3"
-  },
-
-  description: {
-    color: theme.colors.muted,
-    lineHeight: "1.7",
-    minHeight: "65px",
-    marginBottom: "18px"
-  },
-
-  divider: {
-    height: "1px",
-    backgroundColor: "#e2e8f0",
-    margin: "18px 0"
-  },
-
-  feeSection: {
-    marginBottom: "22px"
-  },
-
-  feeLabel: {
-    color: theme.colors.muted,
-    fontSize: "14px",
-    fontWeight: 600
-  },
-
-  fees: {
-    color: theme.colors.secondary,
-    fontSize: "36px",
-    marginTop: "4px",
-    marginBottom: "0",
-    fontWeight: 900
-  },
-
-  perMonth: {
-    color: theme.colors.muted,
-    fontSize: "14px"
-  },
-
-  button: {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    borderRadius: "12px",
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    fontWeight: 800,
-    fontSize: "15px",
-    cursor: "pointer"
-  },
-
-  noCourse: {
-    textAlign: "center",
-    gridColumn: "1 / -1",
-    color: theme.colors.muted,
-    fontSize: "18px"
-  }
-};
 
 export default Courses;

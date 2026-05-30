@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { theme } from "../theme/theme";
 
 interface Props {
   children: React.ReactNode;
@@ -12,7 +11,9 @@ function DashboardLayout({ children }: Props) {
   const user = authContext?.user;
   const navigate = useNavigate();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopCollapsed, setDesktopCollapsed] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const adminMenu = [
     { label: "Dashboard", path: "/dashboard", icon: "🏠" },
@@ -27,15 +28,6 @@ function DashboardLayout({ children }: Props) {
     { label: "Announcements", path: "/dashboard/announcements", icon: "📢" }
   ];
 
-  const teacherMenu = [
-    { label: "Dashboard", path: "/dashboard", icon: "🏠" },
-    { label: "Lectures", path: "/dashboard/lectures", icon: "🎥" },
-    { label: "Materials", path: "/dashboard/materials", icon: "📄" },
-    { label: "Tests", path: "/dashboard/tests", icon: "📝" },
-    { label: "Attendance", path: "/dashboard/attendance", icon: "✅" },
-    { label: "Students", path: "/dashboard/students", icon: "👨‍🎓" }
-  ];
-
   const studentMenu = [
     { label: "Dashboard", path: "/dashboard", icon: "🏠" },
     { label: "My Courses", path: "/dashboard/courses", icon: "📚" },
@@ -47,12 +39,7 @@ function DashboardLayout({ children }: Props) {
     { label: "Notifications", path: "/dashboard/announcements", icon: "🔔" }
   ];
 
-  const menu =
-    user?.role === "admin"
-      ? adminMenu
-      : user?.role === "teacher"
-      ? teacherMenu
-      : studentMenu;
+  const menu = user?.role === "admin" ? adminMenu : studentMenu;
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -61,189 +48,156 @@ function DashboardLayout({ children }: Props) {
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div className="min-h-screen bg-[var(--color-page)] md:flex">
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       <aside
-        style={{
-          ...styles.sidebar,
-          width: collapsed ? "90px" : "280px"
-        }}
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[var(--color-sidebar)] p-5 text-white transition-all duration-300 md:static md:translate-x-0 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } ${desktopCollapsed ? "md:w-24" : "md:w-72"}`}
       >
-        <div style={styles.sidebarTop}>
-          <h2 style={styles.logo}>{collapsed ? "B" : "BFA"}</h2>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2
+              className={`text-3xl font-black ${
+                desktopCollapsed ? "md:hidden" : "block"
+              }`}
+            >
+              LA
+            </h2>
+
+            <p
+              className={`mt-2 text-sm text-slate-300 ${
+                desktopCollapsed ? "hidden" : "block"
+              }`}
+            >
+              {user?.role?.toUpperCase()}
+            </p>
+          </div>
 
           <button
-            onClick={() => setCollapsed(!collapsed)}
-            style={styles.collapseBtn}
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="rounded-lg bg-white/10 px-3 py-1 text-2xl md:hidden cursor-pointer"
           >
-            {collapsed ? "☰" : "×"}
+            ×
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setDesktopCollapsed(!desktopCollapsed)}
+            className="hidden rounded-lg bg-white/10 px-3 py-2 text-white md:block cursor-pointer"
+          >
+            {desktopCollapsed ? "→" : "←"}
           </button>
         </div>
 
-        {!collapsed && <p style={styles.role}>{user?.role?.toUpperCase()}</p>}
-
-        <nav style={styles.nav}>
+        <nav className="flex flex-col gap-3">
           {menu.map((item) => (
-            <Link key={item.path} to={item.path} style={styles.link}>
-              <span>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20 ${
+                desktopCollapsed ? "md:justify-center" : "gap-3"
+              }`}
+            >
+              <span className="text-lg">{item.icon}</span>
+
+              <span className={desktopCollapsed ? "md:hidden" : "block"}>
+                {item.label}
+              </span>
             </Link>
           ))}
         </nav>
 
-        <button onClick={logout} style={styles.logout}>
-          {collapsed ? "🚪" : "Logout"}
+        <button
+          type="button"
+          onClick={logout}
+          className="mt-8 w-full rounded-xl bg-[var(--color-secondary)] px-4 py-3 font-bold text-white cursor-pointer"
+        >
+          <span className={desktopCollapsed ? "md:hidden" : "block"}>
+            Logout
+          </span>
+
+          <span className={desktopCollapsed ? "hidden md:block" : "hidden"}>
+            ⏻
+          </span>
         </button>
       </aside>
 
-      <div style={styles.contentWrapper}>
-        <header style={styles.header}>
-          <div>
-            <h3 style={styles.welcome}>Welcome, {user?.name}</h3>
-            <p style={styles.email}>{user?.email}</p>
+      <div className="flex min-h-screen flex-1 flex-col">
+        <header className="app-card m-4 flex items-center justify-between p-4 md:m-6 md:p-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setMobileOpen(true)}
+              className="text-3xl text-[var(--color-heading)] md:hidden cursor-pointer"
+            >
+              ☰
+            </button>
+
+            <div className="min-w-0">
+              <h3 className="truncate font-bold text-[var(--color-heading)] md:text-xl">
+                Welcome, {user?.name}
+              </h3>
+
+              <p className="truncate text-sm text-[var(--color-muted)] md:text-base">
+                {user?.email}
+              </p>
+            </div>
           </div>
 
-          <div style={styles.profile}>
-            <div style={styles.profileIcon}>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-primary)] font-bold text-white cursor-pointer"
+            >
               {user?.name?.charAt(0).toUpperCase()}
-            </div>
+            </button>
 
-            <div>
-              <strong>{user?.name}</strong>
-              <p style={styles.profileRole}>{user?.role}</p>
-            </div>
+            {profileOpen && (
+              <div className="app-card absolute right-0 top-14 z-50 w-60 p-4">
+                <p className="font-bold text-[var(--color-heading)]">
+                  {user?.name}
+                </p>
+
+                <p className="mt-1 break-all text-sm text-[var(--color-muted)]">
+                  {user?.email}
+                </p>
+
+                <p className="mt-2 text-xs font-bold uppercase text-[var(--color-muted)]">
+                  {user?.role}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="mt-4 w-full rounded-xl bg-red-500 py-2 font-bold text-white cursor-pointer"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
-        <main style={styles.main}>{children}</main>
+        <main className="flex-1 p-4 md:p-6">
+          {children}
+        </main>
 
-        <footer style={styles.footer}>
-          © {new Date().getFullYear()} Bright Future Academy. All rights reserved.
+        <footer className="bg-white p-4 text-center text-sm text-[var(--color-muted)]">
+          © {new Date().getFullYear()} Lakshya Academy. All rights reserved.
         </footer>
       </div>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  wrapper: {
-    display: "flex",
-    minHeight: "100vh",
-    fontFamily: theme.font.main,
-    backgroundColor: theme.colors.light
-  },
-  sidebar: {
-    backgroundColor: theme.colors.dark,
-    color: theme.colors.white,
-    padding: "25px 20px",
-    transition: "0.3s",
-    display: "flex",
-    flexDirection: "column"
-  },
-  sidebarTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  logo: {
-    margin: 0,
-    fontSize: "28px"
-  },
-  collapseBtn: {
-    backgroundColor: "rgba(255,255,255,0.12)",
-    color: theme.colors.white,
-    border: "none",
-    borderRadius: "8px",
-    padding: "8px 10px",
-    cursor: "pointer"
-  },
-  role: {
-    color: "#cbd5e1",
-    fontSize: "13px",
-    marginTop: "15px"
-  },
-  nav: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "12px",
-    marginTop: "25px"
-  },
-  link: {
-    color: theme.colors.white,
-    textDecoration: "none",
-    padding: "13px 15px",
-    borderRadius: "10px",
-    backgroundColor: "rgba(255,255,255,0.08)",
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    fontWeight: 600
-  },
-  logout: {
-    marginTop: "35px",
-    width: "100%",
-    padding: "13px",
-    border: "none",
-    borderRadius: "10px",
-    backgroundColor: theme.colors.secondary,
-    color: theme.colors.white,
-    fontWeight: 800,
-    cursor: "pointer"
-  },
-  contentWrapper: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column"
-  },
-  header: {
-    margin: "25px 35px 0",
-    backgroundColor: theme.colors.white,
-    padding: "20px 28px",
-    borderRadius: "18px",
-    boxShadow: "0 8px 22px rgba(15,23,42,0.08)",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  welcome: {
-    margin: 0,
-    color: theme.colors.dark
-  },
-  email: {
-    marginBottom: 0,
-    color: theme.colors.muted
-  },
-  profile: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px"
-  },
-  profileIcon: {
-    width: "48px",
-    height: "48px",
-    borderRadius: "50%",
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: 800,
-    fontSize: "20px"
-  },
-  profileRole: {
-    margin: 0,
-    color: theme.colors.muted,
-    textTransform: "capitalize"
-  },
-  main: {
-    flex: 1,
-    padding: "35px"
-  },
-  footer: {
-    backgroundColor: theme.colors.white,
-    padding: "18px",
-    textAlign: "center",
-    color: theme.colors.muted
-  }
-};
 
 export default DashboardLayout;

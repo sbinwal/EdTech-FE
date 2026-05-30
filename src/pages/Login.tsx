@@ -1,8 +1,6 @@
 import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
 import API from "../api/axios";
-import { theme } from "../theme/theme";
 import { AuthContext } from "../context/AuthContext";
 
 function Login() {
@@ -38,103 +36,65 @@ function Login() {
   };
 
   return (
-    <section style={styles.page}>
-      <div style={styles.loginBox}>
-        <h1 style={styles.title}>Welcome Back</h1>
-        <p style={styles.subtitle}>Login to continue your learning journey</p>
+    <section className="flex min-h-[80vh] items-center justify-center bg-[var(--color-page)] px-4 py-10">
+      <div className="app-card grid w-full max-w-6xl overflow-hidden md:grid-cols-2">
+        <div className="flex min-h-[360px] flex-col justify-center bg-gradient-to-br from-[var(--color-primary)] via-purple-500 to-[var(--color-secondary)] p-8 text-white md:min-h-[560px] md:p-14">
+          <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
+            Welcome Back
+          </h1>
 
-        <form onSubmit={handleSubmit}>
-          <input
-            style={styles.input}
-            type="email"
-            placeholder="Email Address"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <p className="mt-8 max-w-md text-lg leading-8">
+            Login to continue your learning journey and access recorded
+            lectures, study material, tests, fees and progress dashboard.
+          </p>
+        </div>
 
-          <input
-            style={styles.input}
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button style={styles.button} type="submit">
+        <div className="flex flex-col justify-center p-6 md:p-14">
+          <h2 className="app-heading text-3xl md:text-4xl">
             Login
-          </button>
-        </form>
+          </h2>
 
-        <p style={styles.bottomText}>
-          New student?{" "}
-          <Link to="/register" style={styles.link}>
-            Create account
-          </Link>
-        </p>
+          <p className="app-muted mt-3 text-lg">
+            Enter your details to access your dashboard
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <input
+              className="app-input text-base"
+              type="email"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            <input
+              className="app-input text-base"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button
+              className="app-button-primary w-full py-4 text-lg cursor-pointer"
+              type="submit"
+            >
+              Login
+            </button>
+          </form>
+
+          <p className="app-muted mt-6 text-lg">
+            New student?{" "}
+            <Link to="/register" className="font-extrabold text-[var(--color-primary)]">
+              Create account
+            </Link>
+          </p>
+        </div>
       </div>
     </section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  page: {
-    minHeight: "80vh",
-    background: `linear-gradient(135deg, ${theme.colors.light}, #e0f2fe)`,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "60px 20px",
-    fontFamily: theme.font.main
-  },
-  loginBox: {
-    width: "100%",
-    maxWidth: "440px",
-    backgroundColor: theme.colors.white,
-    padding: "45px",
-    borderRadius: "22px",
-    boxShadow: "0 20px 45px rgba(15, 23, 42, 0.15)"
-  },
-  title: {
-    fontSize: "34px",
-    color: theme.colors.dark,
-    marginBottom: "8px",
-    textAlign: "center"
-  },
-  subtitle: {
-    color: theme.colors.muted,
-    textAlign: "center",
-    marginBottom: "28px"
-  },
-  input: {
-    width: "100%",
-    padding: "14px 16px",
-    marginBottom: "16px",
-    border: "1px solid #cbd5e1",
-    borderRadius: "10px",
-    fontSize: "15px",
-    outline: "none"
-  },
-  button: {
-    width: "100%",
-    padding: "14px",
-    border: "none",
-    borderRadius: "10px",
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    fontSize: "16px",
-    fontWeight: 700,
-    cursor: "pointer"
-  },
-  bottomText: {
-    marginTop: "20px",
-    color: theme.colors.muted,
-    textAlign: "center"
-  },
-  link: {
-    color: theme.colors.primary,
-    fontWeight: 700,
-    textDecoration: "none"
-  }
-};
 
 export default Login;
