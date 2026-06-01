@@ -16,10 +16,11 @@ import DashboardCourses from "./pages/dashboard/DashboardCourses";
 import DashboardCategories from "./pages/dashboard/DashboardCategories";
 import Lectures from "./pages/dashboard/Lectures";
 import Materials from "./pages/dashboard/Materials";
-import Tests from   "./pages/dashboard/Tests";
-import Attendance from  "./pages/dashboard/Attendance";
+import Tests from "./pages/dashboard/Tests";
+import Attendance from "./pages/dashboard/Attendance";
 import Fees from "./pages/dashboard/Fees";
-import Announcements from   "./pages/dashboard/Announcements";
+import Announcements from "./pages/dashboard/Announcements";
+import AddStudent from "./pages/dashboard/AddStudent";
 
 function App() {
   return (
@@ -32,7 +33,27 @@ function App() {
         <Route path="/courses/:courseId" element={<MainLayout><CourseDetails /></MainLayout>} />
 
         <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><Dashboard /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/dashboard/students" element={<ProtectedRoute><DashboardLayout><Students /></DashboardLayout></ProtectedRoute>} />
+        <Route
+          path="/dashboard/students"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Students />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/students/create"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <AddStudent />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
         <Route path="/dashboard/courses" element={<ProtectedRoute><DashboardLayout><DashboardCourses /></DashboardLayout></ProtectedRoute>} />
         <Route path="/dashboard/categories" element={<ProtectedRoute><DashboardLayout><DashboardCategories /></DashboardLayout></ProtectedRoute>} />
         <Route path="/dashboard/lectures" element={<ProtectedRoute><DashboardLayout><Lectures /></DashboardLayout></ProtectedRoute>} />

@@ -44,11 +44,11 @@ function DashboardLayout({ children }: Props) {
   const logout = () => {
     localStorage.removeItem("token");
     authContext?.setUser(null);
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-page)] md:flex">
+    <div className="h-screen min-w-0 overflow-hidden bg-[var(--color-page)] md:flex">
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
@@ -57,7 +57,7 @@ function DashboardLayout({ children }: Props) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[var(--color-sidebar)] p-5 text-white transition-all duration-300 md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 overflow-y-auto bg-[var(--color-sidebar)] p-5 text-white transition-all duration-300 md:static md:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         } ${desktopCollapsed ? "md:w-24" : "md:w-72"}`}
       >
@@ -83,7 +83,7 @@ function DashboardLayout({ children }: Props) {
           <button
             type="button"
             onClick={() => setMobileOpen(false)}
-            className="rounded-lg bg-white/10 px-3 py-1 text-2xl md:hidden cursor-pointer"
+            className="cursor-pointer rounded-lg bg-white/10 px-3 py-1 text-2xl md:hidden"
           >
             ×
           </button>
@@ -91,7 +91,7 @@ function DashboardLayout({ children }: Props) {
           <button
             type="button"
             onClick={() => setDesktopCollapsed(!desktopCollapsed)}
-            className="hidden rounded-lg bg-white/10 px-3 py-2 text-white md:block cursor-pointer"
+            className="hidden cursor-pointer rounded-lg bg-white/10 px-3 py-2 text-white md:block"
           >
             {desktopCollapsed ? "→" : "←"}
           </button>
@@ -119,7 +119,7 @@ function DashboardLayout({ children }: Props) {
         <button
           type="button"
           onClick={logout}
-          className="mt-8 w-full rounded-xl bg-[var(--color-secondary)] px-4 py-3 font-bold text-white cursor-pointer"
+          className="mt-8 w-full cursor-pointer rounded-xl bg-[var(--color-secondary)] px-4 py-3 font-bold text-white"
         >
           <span className={desktopCollapsed ? "md:hidden" : "block"}>
             Logout
@@ -131,13 +131,13 @@ function DashboardLayout({ children }: Props) {
         </button>
       </aside>
 
-      <div className="flex min-h-screen flex-1 flex-col">
-        <header className="app-card m-4 flex items-center justify-between p-4 md:m-6 md:p-5">
+      <div className="flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="app-card m-4 flex shrink-0 items-center justify-between p-4 md:m-6 md:p-5">
           <div className="flex min-w-0 items-center gap-3">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
-              className="text-3xl text-[var(--color-heading)] md:hidden cursor-pointer"
+              className="cursor-pointer text-3xl text-[var(--color-heading)] md:hidden"
             >
               ☰
             </button>
@@ -153,11 +153,11 @@ function DashboardLayout({ children }: Props) {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
               type="button"
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-primary)] font-bold text-white cursor-pointer"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[var(--color-primary)] font-bold text-white"
             >
               {user?.name?.charAt(0).toUpperCase()}
             </button>
@@ -179,7 +179,7 @@ function DashboardLayout({ children }: Props) {
                 <button
                   type="button"
                   onClick={logout}
-                  className="mt-4 w-full rounded-xl bg-red-500 py-2 font-bold text-white cursor-pointer"
+                  className="mt-4 w-full cursor-pointer rounded-xl bg-red-500 py-2 font-bold text-white"
                 >
                   Sign out
                 </button>
@@ -188,11 +188,11 @@ function DashboardLayout({ children }: Props) {
           </div>
         </header>
 
-        <main className="flex-1 p-4 md:p-6">
+        <main className="min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6">
           {children}
         </main>
 
-        <footer className="bg-white p-4 text-center text-sm text-[var(--color-muted)]">
+        <footer className="shrink-0 bg-white p-4 text-center text-sm text-[var(--color-muted)]">
           © {new Date().getFullYear()} Lakshya Academy. All rights reserved.
         </footer>
       </div>
