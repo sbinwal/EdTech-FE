@@ -9,6 +9,7 @@ interface Props {
   required?: boolean;
   error?: string;
   rightIcon?: ReactNode;
+  disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +22,7 @@ function FormInput({
   required = false,
   error,
   rightIcon,
+  disabled = false,
   onChange
 }: Props) {
   return (
@@ -31,14 +33,17 @@ function FormInput({
 
       <div className="relative">
         <input
-          className={`app-input ${rightIcon ? "pr-12" : ""} ${
-            error ? "border-red-500" : ""
-          }`}
+          className={`app-input ${rightIcon ? "pr-12" : ""} ${error ? "border-red-500" : ""
+            } ${disabled
+              ? "cursor-not-allowed bg-slate-100 text-slate-500"
+              : ""
+            }`}
           name={name}
           type={type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          disabled={disabled}
         />
 
         {rightIcon && (

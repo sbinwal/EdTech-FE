@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import API from "../../api/axios";
+import { FaEdit } from "react-icons/fa";
+import API from "../../../src/api/axios";
+import AppPagination from "../../components/common/AppPagination";
 
 interface Category {
   _id: string;
@@ -72,7 +74,7 @@ function Students() {
 
   const fetchCategories = async () => {
     const res = await API.get("/categories");
-    setCategories(res.data);
+    setCategories(res?.data?.categories || res?.data || []);
   };
 
   const fetchCourses = async () => {
@@ -89,28 +91,15 @@ function Students() {
     fetchStudents();
   }, [page, search, category, course, status]);
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    setPage(1);
-  };
+  const toggleStatus = async (id: string, currentStatus: string) => {
+    const action = currentStatus === "active" ? "disable" : "enable";
 
-  const handleCategoryChange = (value: string) => {
-    setCategory(value);
-    setCourse("");
-    setPage(1);
-  };
+    const confirmStatus = window.confirm(
+      `Are you sure you want to ${action} this student?`
+    );
 
-  const handleCourseChange = (value: string) => {
-    setCourse(value);
-    setPage(1);
-  };
+    if (!confirmStatus) return;
 
-  const handleStatusChange = (value: string) => {
-    setStatus(value);
-    setPage(1);
-  };
-
-  const toggleStatus = async (id: string) => {
     await API.patch(`/students/${id}/status`, {}, authHeader);
     fetchStudents();
   };
@@ -118,6 +107,7 @@ function Students() {
   const filteredCourses = category
     ? courses.filter((item) => item.category?._id === category)
     : courses;
+
 
   return (
     <div>
@@ -138,25 +128,32 @@ function Students() {
 
         <Link
           to="/dashboard/students/create"
-          className="app-button-primary px-6 py-3 text-center"
+          className="app-button-primary inline-flex items-center gap-2 px-5 py-2 text-sm"
         >
-          + Add New Student
+          + Add Student
         </Link>
       </div>
 
-      <div className="app-card overflow-hidden">
+      <div className="app-card max-w-full overflow-hidden">
         <div className="grid grid-cols-1 gap-4 border-b border-[var(--color-border)] p-6 md:grid-cols-4">
           <input
             className="app-input"
             placeholder="Search name, email, mobile or course"
             value={search}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
           />
 
           <select
             className="app-input"
             value={category}
-            onChange={(e) => handleCategoryChange(e.target.value)}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setCourse("");
+              setPage(1);
+            }}
           >
             <option value="">All Categories</option>
 
@@ -170,7 +167,10 @@ function Students() {
           <select
             className="app-input"
             value={course}
-            onChange={(e) => handleCourseChange(e.target.value)}
+            onChange={(e) => {
+              setCourse(e.target.value);
+              setPage(1);
+            }}
           >
             <option value="">All Courses</option>
 
@@ -184,7 +184,10 @@ function Students() {
           <select
             className="app-input"
             value={status}
-            onChange={(e) => handleStatusChange(e.target.value)}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(1);
+            }}
           >
             <option value="">All Status</option>
             <option value="active">Active</option>
@@ -192,18 +195,22 @@ function Students() {
           </select>
         </div>
 
-        <div className="max-h-[520px] overflow-auto">
-  <table className="w-full min-w-[1250px] text-left">
+        <div className="max-h-[520px] max-w-full overflow-auto">
+          <table className="min-w-[1400px] table-fixed text-left">
             <thead className="sticky top-0 z-10 bg-slate-50">
               <tr>
-                <th className="px-5 py-4">Name</th>
-                <th className="px-5 py-4">Email</th>
-                <th className="px-5 py-4">Mobile</th>
-                <th className="px-5 py-4">Category</th>
-                <th className="px-5 py-4">Course</th>
-                <th className="px-5 py-4">Parent</th>
-                <th className="px-5 py-4">Status</th>
-                <th className="px-5 py-4">Actions</th>
+                <th className="w-[220px] px-5 py-4">Name</th>
+                <th className="w-[250px] px-5 py-4">Email</th>
+                <th className="w-[180px] px-5 py-4">Mobile</th>
+                <th className="w-[180px] px-5 py-4">Category</th>
+                <th className="w-[220px] px-5 py-4">Course</th>
+                <th className="w-[250px] px-5 py-4">Parent</th>
+                <th className="w-[150px] px-5 py-4 text-center">
+                  Status
+                </th>
+                <th className="w-[180px] px-5 py-4 text-center">
+                  Actions
+                </th>
               </tr>
             </thead>
 
@@ -221,9 +228,7 @@ function Students() {
                     {student.user?.email}
                   </td>
 
-                  <td className="px-5 py-4">
-                    {student.phone}
-                  </td>
+                  <td className="px-5 py-4">{student.phone}</td>
 
                   <td className="px-5 py-4">
                     {student.course?.category?.name || "-"}
@@ -240,11 +245,11 @@ function Students() {
                     </div>
                   </td>
 
-                  <td className="px-5 py-4">
+                  <td className="px-5 py-4 text-center">
                     <span
-                      className={`rounded-full px-4 py-2 text-sm font-bold capitalize ${student.status === "active"
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-red-600"
+                      className={`inline-flex rounded-full px-4 py-2 text-sm font-bold capitalize ${student.status === "active"
+                        ? " text-[var(--color-primary)]"
+                        : " text-[var(--color-danger)]"
                         }`}
                     >
                       {student.status}
@@ -252,44 +257,34 @@ function Students() {
                   </td>
 
                   <td className="px-5 py-4">
-  <div className="flex items-center gap-3">
-    <Link
-      to={`/dashboard/students/edit/${student._id}`}
-      className="rounded-lg bg-blue-50 px-3 py-2 font-bold text-[var(--color-primary)]"
-      title="Edit Student"
-    >
-      ✏️
-    </Link>
+                    <div className="flex items-center justify-center gap-3">
+                      <Link
+                        to={`/dashboard/students/edit/${student._id}`}
+                        className="flex h-10 w-10 items-center justify-center rounded-lg  text-[var(--color-primary)] transition-all "
+                        title="Edit Student"
+                      >
+                        <FaEdit size={20} />
+                      </Link>
 
-    <button
-      type="button"
-      onClick={() => {
-        const action =
-          student.status === "active" ? "disable" : "enable";
-
-        const confirmStatus = window.confirm(
-          `Are you sure you want to ${action} this student?`
-        );
-
-        if (!confirmStatus) return;
-
-        toggleStatus(student._id);
-      }}
-      className={`relative h-8 w-16 rounded-full transition-all duration-300 ${
-        student.status === "active"
-          ? "bg-green-500"
-          : "bg-red-400"
-      }`}
-      title={student.status === "active" ? "Disable Student" : "Enable Student"}
-    >
-      <span
-        className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-all duration-300 ${
-          student.status === "active" ? "left-9" : "left-1"
-        }`}
-      />
-    </button>
-  </div>
-</td>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toggleStatus(student._id, student.status)
+                        }
+                        className={`relative h-6 w-11 rounded-full transition-all duration-300 ${student.status === "active"
+                          ? "bg-[var(--color-primary)]"
+                          : "bg-[var(--color-danger)]"
+                          }`}
+                      >
+                        <span
+                          className={`absolute top-[2px] h-5 w-5 rounded-full bg-white shadow-md transition-all duration-300 ${student.status === "active"
+                            ? "left-[22px]"
+                            : "left-[2px]"
+                            }`}
+                        />
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
 
@@ -307,31 +302,21 @@ function Students() {
           </table>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-[var(--color-border)] p-5 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 border-t border-[var(--color-border)] p-5 lg:flex-row lg:items-center lg:justify-between">
           <p className="text-sm font-semibold text-[var(--color-muted)]">
             Total Students: {totalStudents}
           </p>
 
-          <div className="flex items-center justify-between gap-3">
-            <button
-              className="rounded-lg border border-[var(--color-border)] px-4 py-2 font-bold disabled:opacity-50"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Previous
-            </button>
-
-            <p className="font-semibold text-[var(--color-muted)]">
-              Page {page} of {totalPages}
+          <div className="flex flex-col gap-4 border-t border-[var(--color-border)] p-5 lg:flex-row lg:items-center lg:justify-between">
+            <p className="text-sm font-semibold text-[var(--color-muted)]">
+              Total Students: {totalStudents}
             </p>
 
-            <button
-              className="rounded-lg border border-[var(--color-border)] px-4 py-2 font-bold disabled:opacity-50"
-              disabled={page === totalPages || totalPages === 0}
-              onClick={() => setPage(page + 1)}
-            >
-              Next
-            </button>
+            <AppPagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+            />
           </div>
         </div>
       </div>
