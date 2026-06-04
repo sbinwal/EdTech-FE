@@ -12,7 +12,6 @@ import AddCourse from "./pages/dashboard/courses/AddCourse";
 import EditCourse from "./pages/dashboard/courses/EditCourse";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Students from "./pages/dashboard/Students";
-import Lectures from "./pages/dashboard/Lectures";
 import Materials from "./pages/dashboard/Materials";
 import Tests from "./pages/dashboard/Tests";
 import Attendance from "./pages/dashboard/Attendance";
@@ -23,6 +22,10 @@ import EditStudent from "./pages/dashboard/EditStudent";
 import Categories from "./pages/dashboard/categories/Categories";
 import AddCategory from "./pages/dashboard/categories/AddCategory";
 import EditCategory from "./pages/dashboard/categories/EditCategory";
+import Course from "./pages/course";
+import Lectures from "./pages/dashboard/lectures/Lectures";
+import AddLecture from "./pages/dashboard/lectures/AddLecture";
+import EditLecture from "./pages/dashboard/lectures/EditLecture";
 
 function App() {
   return (
@@ -111,6 +114,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/course"
+          element={
+           
+              <MainLayout>
+                <Course/>
+              </MainLayout>
+           
+          }
+        />
 
         <Route
           path="/dashboard/courses/create"
@@ -133,6 +146,38 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/dashboard/lectures"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <Lectures />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/dashboard/lectures/create"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <AddLecture />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/dashboard/lectures/edit/:id"
+  element={
+    <ProtectedRoute>
+      <DashboardLayout>
+        <EditLecture />
+      </DashboardLayout>
+    </ProtectedRoute>
+  }
+/>
       </Routes>
     </BrowserRouter>
   );

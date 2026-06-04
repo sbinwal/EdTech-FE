@@ -12,12 +12,12 @@ function Courses() {
 
   const fetchCategories = async () => {
     const res = await API.get("/categories");
-    setCategories(res.data);
+    setCategories(res?.data?.categories || []);
   };
 
   const fetchCourses = async () => {
     const res = await API.get("/courses");
-    setCourses(res.data);
+    setCourses(res?.data || []);
   };
 
   useEffect(() => {

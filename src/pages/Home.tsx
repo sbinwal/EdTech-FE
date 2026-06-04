@@ -31,7 +31,7 @@ function Home() {
             </Link>
 
             <Link
-              to="/courses"
+              to="/course"
               className="rounded-xl border-2 border-[var(--color-primary)] px-8 py-4 text-center font-bold text-[var(--color-primary)] transition hover:bg-blue-50"
             >
               View Courses

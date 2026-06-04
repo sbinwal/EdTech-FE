@@ -151,8 +151,8 @@ function Categories() {
                     <span
                       className={`inline-flex rounded-full px-4 py-2 text-sm font-bold capitalize ${
                         category.status === "active"
-                          ? "bg-[var(--color-primary-light)] text-[var(--color-primary)]"
-                          : "bg-[var(--color-danger-light)] text-[var(--color-danger)]"
+                          ? "text-[var(--color-primary)]"
+                          : " text-[var(--color-danger)]"
                       }`}
                     >
                       {category.status}
@@ -163,10 +163,10 @@ function Categories() {
                     <div className="flex items-center justify-center gap-3">
                       <Link
                         to={`/dashboard/categories/edit/${category._id}`}
-                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--color-primary-light)] text-[var(--color-primary)] transition-all hover:bg-[var(--color-primary)] hover:text-white"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg text-[var(--color-primary)] transition-all "
                         title="Edit Category"
                       >
-                        <FaEdit size={14} />
+                        <FaEdit size={16} />
                       </Link>
 
                       <button
